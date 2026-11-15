@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout.jsx'
 import PasswordInput from '../components/PasswordInput.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
+import { getErrorMessage, getFieldErrors } from '../services/api.js'
 
 const emptyForm = {
   fullName: '',
@@ -11,55 +13,69 @@ const emptyForm = {
   confirmPassword: '',
 }
 
+const serverToForm = {
+  full_name: 'fullName',
+  confirm_password: 'confirmPassword',
+}
+
 function validate(form) {
   const errors = {}
 
   if (form.fullName.trim().length < 2) {
     errors.fullName = 'Please enter your full name.'
   }
-
   if (!/^[A-Za-z0-9_]{3,20}$/.test(form.username)) {
     errors.username = 'Username must be 3 to 20 letters, numbers or underscores.'
   }
-
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
     errors.email = 'Please enter a valid email address.'
   }
-
   if (form.password.length < 8) {
     errors.password = 'Password must be at least 8 characters.'
   } else if (!/[A-Za-z]/.test(form.password) || !/[0-9]/.test(form.password)) {
     errors.password = 'Password must contain both letters and numbers.'
   }
-
   if (form.confirmPassword !== form.password) {
     errors.confirmPassword = 'Passwords do not match.'
   }
-
   return errors
 }
 
 function Register() {
+  const { register } = useAuth()
+  const navigate = useNavigate()
+
   const [form, setForm] = useState(emptyForm)
   const [errors, setErrors] = useState({})
-  const [message, setMessage] = useState('')
+  const [serverMessage, setServerMessage] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   function handleChange(event) {
     const { name, value } = event.target
     setForm({ ...form, [name]: value })
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
+    setServerMessage('')
+
     const foundErrors = validate(form)
     setErrors(foundErrors)
+    if (Object.keys(foundErrors).length > 0) return
 
-    if (Object.keys(foundErrors).length === 0) {
-      setMessage(
-        'Form is valid. The backend is not connected yet, so no account was created. This will work after Phase 9.'
-      )
-    } else {
-      setMessage('')
+    setSubmitting(true)
+    try {
+      await register(form)
+      navigate('/dashboard')
+    } catch (error) {
+      const fieldErrors = {}
+      for (const [field, message] of Object.entries(getFieldErrors(error))) {
+        fieldErrors[serverToForm[field] || field] = message
+      }
+      setErrors(fieldErrors)
+      setServerMessage(getErrorMessage(error))
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -138,10 +154,10 @@ function Register() {
           />
         </div>
 
-        {message && <div className="alert alert-info">{message}</div>}
+        {serverMessage && <div className="alert alert-danger">{serverMessage}</div>}
 
-        <button type="submit" className="btn btn-ps w-100 btn-lg">
-          Create Account
+        <button type="submit" className="btn btn-ps w-100 btn-lg" disabled={submitting}>
+          {submitting ? 'Creating account...' : 'Create Account'}
         </button>
       </form>
 

@@ -1,4 +1,5 @@
-import { NavLink, Link, Outlet } from 'react-router-dom'
+import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
 
 const menu = [
   { to: '/dashboard', icon: 'bi-speedometer2', label: 'Dashboard' },
@@ -38,6 +39,14 @@ function SidebarMenu() {
 }
 
 function DashboardLayout() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    await logout()
+    navigate('/login')
+  }
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -78,10 +87,14 @@ function DashboardLayout() {
             >
               <i className="bi bi-list"></i>
             </button>
-            <span className="fw-semibold ms-2">My Account</span>
-            <span className="text-muted small d-none d-md-inline">
-              Login is connected in Phase 9
+            <span className="fw-semibold ms-2">
+              <i className="bi bi-person-circle me-1"></i>
+              {user?.full_name || user?.username}
             </span>
+            <button className="btn btn-sm btn-outline-secondary" onClick={handleLogout}>
+              <i className="bi bi-box-arrow-right me-1"></i>
+              Logout
+            </button>
           </div>
 
           <div className="p-3 p-md-4">
