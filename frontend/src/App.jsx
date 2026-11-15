@@ -11,6 +11,7 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import Properties from './pages/Properties.jsx'
 
 function PublicLayout() {
   return (
@@ -39,7 +40,7 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/properties" element={<ComingSoon title="Property Management" phase="Phase 9B" />} />
+          <Route path="/properties" element={<Properties />} />
           <Route path="/readings" element={<ComingSoon title="Meter Readings" phase="Phase 10" />} />
           <Route path="/appliances" element={<ComingSoon title="Appliance Management" phase="Phase 11" />} />
           <Route path="/analytics" element={<ComingSoon title="Consumption Analytics" phase="Phase 13" />} />
@@ -47,7 +48,7 @@ function App() {
           <Route path="/alerts" element={<ComingSoon title="Alerts and Notifications" phase="Phase 14" />} />
           <Route path="/recommendations" element={<ComingSoon title="Energy Saving Recommendations" phase="Phase 14" />} />
           <Route path="/forecast" element={<ComingSoon title="Historical Comparison and Forecasting" phase="Phase 15" />} />
-          <Route path="/profile" element={<ComingSoon title="User Profile" phase="Phase 9B" />} />
+          <Route path="/profile" element={<ComingSoon title="User Profile" phase="Phase 9" />} />
         </Route>
       </Route>
     </Routes>
