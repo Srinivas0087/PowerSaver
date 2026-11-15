@@ -1,9 +1,6 @@
 # PowerSaver
-
-Electricity monitoring and analysis platform.
-
-**Team:** TEAM 7
-**Technologies:** HTML, CSS, JavaScript, React.js, Python, Django, Django REST Framework, SQLite
-
+Electricity Monitoring and Analysis Platform
 ## Status
 - [x] Phase 1: Project setup
+- [x] Phase 2: React frontend setup
+- [x] Phase 3: Landing page and navigation
