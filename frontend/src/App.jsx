@@ -12,6 +12,7 @@ import Register from './pages/Register.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Properties from './pages/Properties.jsx'
+import Readings from './pages/Readings.jsx'
 
 function PublicLayout() {
   return (
@@ -41,7 +42,7 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/properties" element={<Properties />} />
-          <Route path="/readings" element={<ComingSoon title="Meter Readings" phase="Phase 10" />} />
+          <Route path="/readings" element={<Readings />} />
           <Route path="/appliances" element={<ComingSoon title="Appliance Management" phase="Phase 11" />} />
           <Route path="/analytics" element={<ComingSoon title="Consumption Analytics" phase="Phase 13" />} />
           <Route path="/billing" element={<ComingSoon title="Bill Estimation" phase="Phase 12" />} />
