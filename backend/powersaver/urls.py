@@ -28,4 +28,5 @@ urlpatterns = [
     path('api/health/', health_check),
     path('api/auth/', include('users.urls')),
     path('api/', include('properties.urls')),
+    path('api/', include('readings.urls')),
 ]
