@@ -1,6 +1,15 @@
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
 
 function Navbar() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    await logout()
+    navigate('/')
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark ps-navbar sticky-top">
       <div className="container">
@@ -28,21 +37,34 @@ function Navbar() {
                 Home
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/dashboard">
-                Dashboard (demo)
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/login">
-                Login
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <Link className="btn btn-ps ms-lg-2" to="/register">
-                Get Started
-              </Link>
-            </li>
+
+            {user ? (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/dashboard">
+                    Dashboard
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <button className="btn btn-outline-light ms-lg-2" onClick={handleLogout}>
+                    Logout ({user.username})
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/login">
+                    Login
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <Link className="btn btn-ps ms-lg-2" to="/register">
+                    Get Started
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

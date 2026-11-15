@@ -1,37 +1,42 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import AuthLayout from '../components/AuthLayout.jsx'
 import PasswordInput from '../components/PasswordInput.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
+import { getErrorMessage } from '../services/api.js'
 
 function Login() {
+  const { login } = useAuth()
+  const navigate = useNavigate()
+
   const [form, setForm] = useState({ username: '', password: '' })
   const [errors, setErrors] = useState({})
-  const [message, setMessage] = useState('')
+  const [serverMessage, setServerMessage] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   function handleChange(event) {
     const { name, value } = event.target
     setForm({ ...form, [name]: value })
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
+    setServerMessage('')
+
     const foundErrors = {}
-
-    if (form.username.trim() === '') {
-      foundErrors.username = 'Please enter your username.'
-    }
-    if (form.password === '') {
-      foundErrors.password = 'Please enter your password.'
-    }
-
+    if (form.username.trim() === '') foundErrors.username = 'Please enter your username.'
+    if (form.password === '') foundErrors.password = 'Please enter your password.'
     setErrors(foundErrors)
+    if (Object.keys(foundErrors).length > 0) return
 
-    if (Object.keys(foundErrors).length === 0) {
-      setMessage(
-        'Form is valid. The backend is not connected yet, so no login happened. This will work after Phase 9.'
-      )
-    } else {
-      setMessage('')
+    setSubmitting(true)
+    try {
+      await login(form.username.trim(), form.password)
+      navigate('/dashboard')
+    } catch (error) {
+      setServerMessage(getErrorMessage(error))
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -69,10 +74,10 @@ function Login() {
           />
         </div>
 
-        {message && <div className="alert alert-info">{message}</div>}
+        {serverMessage && <div className="alert alert-danger">{serverMessage}</div>}
 
-        <button type="submit" className="btn btn-ps w-100 btn-lg">
-          Login
+        <button type="submit" className="btn btn-ps w-100 btn-lg" disabled={submitting}>
+          {submitting ? 'Logging in...' : 'Login'}
         </button>
       </form>
 
