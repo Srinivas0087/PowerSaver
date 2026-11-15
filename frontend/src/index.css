@@ -85,3 +85,28 @@ body {
   background: var(--ps-navy);
   color: #cbd5e1;
 }
+
+.ps-auth-wrapper {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.ps-auth-card {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(11, 36, 71, 0.12);
+}
+
+.ps-auth-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: var(--ps-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
