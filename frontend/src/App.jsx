@@ -12,6 +12,8 @@ import Register from './pages/Register.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Properties from './pages/Properties.jsx'
+import Readings from './pages/Readings.jsx'
+import Appliances from './pages/Appliances.jsx'
 
 function PublicLayout() {
   return (
@@ -28,7 +30,6 @@ function PublicLayout() {
 function App() {
   return (
     <Routes>
-      {/* Public pages: navbar + footer */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
@@ -36,13 +37,12 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Route>
 
-      {/* Dashboard pages: only for logged-in users */}
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/properties" element={<Properties />} />
-          <Route path="/readings" element={<ComingSoon title="Meter Readings" phase="Phase 10" />} />
-          <Route path="/appliances" element={<ComingSoon title="Appliance Management" phase="Phase 11" />} />
+          <Route path="/readings" element={<Readings />} />
+          <Route path="/appliances" element={<Appliances />} />
           <Route path="/analytics" element={<ComingSoon title="Consumption Analytics" phase="Phase 13" />} />
           <Route path="/billing" element={<ComingSoon title="Bill Estimation" phase="Phase 12" />} />
           <Route path="/alerts" element={<ComingSoon title="Alerts and Notifications" phase="Phase 14" />} />
