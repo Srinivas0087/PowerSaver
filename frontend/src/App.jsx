@@ -14,6 +14,7 @@ import Dashboard from './pages/Dashboard.jsx'
 import Properties from './pages/Properties.jsx'
 import Readings from './pages/Readings.jsx'
 import Appliances from './pages/Appliances.jsx'
+import Billing from './pages/Billing.jsx'
 
 function PublicLayout() {
   return (
@@ -44,7 +45,7 @@ function App() {
           <Route path="/readings" element={<Readings />} />
           <Route path="/appliances" element={<Appliances />} />
           <Route path="/analytics" element={<ComingSoon title="Consumption Analytics" phase="Phase 13" />} />
-          <Route path="/billing" element={<ComingSoon title="Bill Estimation" phase="Phase 12" />} />
+          <Route path="/billing" element={<Billing />} />
           <Route path="/alerts" element={<ComingSoon title="Alerts and Notifications" phase="Phase 14" />} />
           <Route path="/recommendations" element={<ComingSoon title="Energy Saving Recommendations" phase="Phase 14" />} />
           <Route path="/forecast" element={<ComingSoon title="Historical Comparison and Forecasting" phase="Phase 15" />} />
