@@ -1,3 +1,4 @@
+
 import { Routes, Route, Outlet } from 'react-router-dom'
 
 import Navbar from './components/Navbar.jsx'
@@ -10,16 +11,27 @@ import Landing from './pages/Landing.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import NotFound from './pages/NotFound.jsx'
+
 import Dashboard from './pages/Dashboard.jsx'
 import Properties from './pages/Properties.jsx'
+import Readings from './pages/Readings.jsx'
+import Appliances from './pages/Appliances.jsx'
+import Analytics from './pages/Analytics.jsx'
+import Billing from './pages/Billing.jsx'
+import Alerts from './pages/Alerts.jsx'
+import Recommendations from './pages/Recommendations.jsx'
+import Forecast from './pages/Forecast.jsx'
+import Profile from './pages/Profile.jsx'
 
 function PublicLayout() {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Navbar />
+
       <main className="flex-grow-1">
         <Outlet />
       </main>
+
       <Footer />
     </div>
   )
@@ -28,7 +40,8 @@ function PublicLayout() {
 function App() {
   return (
     <Routes>
-      {/* Public pages: navbar + footer */}
+
+      {/* Public Pages */}
       <Route element={<PublicLayout />}>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
@@ -36,21 +49,73 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Route>
 
-      {/* Dashboard pages: only for logged-in users */}
+      {/* Protected Dashboard Pages */}
       <Route element={<ProtectedRoute />}>
         <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/properties" element={<Properties />} />
-          <Route path="/readings" element={<ComingSoon title="Meter Readings" phase="Phase 10" />} />
-          <Route path="/appliances" element={<ComingSoon title="Appliance Management" phase="Phase 11" />} />
-          <Route path="/analytics" element={<ComingSoon title="Consumption Analytics" phase="Phase 13" />} />
-          <Route path="/billing" element={<ComingSoon title="Bill Estimation" phase="Phase 12" />} />
-          <Route path="/alerts" element={<ComingSoon title="Alerts and Notifications" phase="Phase 14" />} />
-          <Route path="/recommendations" element={<ComingSoon title="Energy Saving Recommendations" phase="Phase 14" />} />
-          <Route path="/forecast" element={<ComingSoon title="Historical Comparison and Forecasting" phase="Phase 15" />} />
-          <Route path="/profile" element={<ComingSoon title="User Profile" phase="Phase 9" />} />
+
+          {/* Dashboard */}
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
+          />
+
+          {/* Property Management */}
+          <Route
+            path="/properties"
+            element={<Properties />}
+          />
+
+          {/* Electricity Readings */}
+          <Route
+            path="/readings"
+            element={<Readings />}
+          />
+
+          {/* Phase 16: Appliance Management */}
+          <Route
+            path="/appliances"
+            element={<Appliances />}
+          />
+
+          {/* Analytics */}
+          <Route
+            path="/analytics"
+            element={<Analytics />}
+          />
+
+          {/* Phase 12: Bill Estimation */}
+          <Route
+            path="/billing"
+            element={<Billing />}
+          />
+
+          {/* Phase 14: Alerts */}
+          <Route
+            path="/alerts"
+            element={<Alerts />}
+          />
+
+          {/* Phase 14: Recommendations */}
+          <Route
+            path="/recommendations"
+            element={<Recommendations />}
+          />
+
+          {/* Phase 15: Historical Comparison and Forecasting */}
+          <Route
+            path="/forecast"
+            element={<Forecast />}
+          />
+
+          {/* Phase 9: User Profile */}
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+
         </Route>
       </Route>
+
     </Routes>
   )
 }
