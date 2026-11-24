@@ -12,6 +12,13 @@ PowerSaver is a full-stack web application that helps people understand how much
 | **Authentication** | DRF token authentication |
 | **API style** | REST, JSON over HTTP |
 
+
+## Live Demo
+
+- **Frontend:** https://your-app.vercel.app
+- **Backend API:** https://powersaver-api.onrender.com/api/health/
+
+> The backend runs on Render's free plan, so the first request after inactivity can take about 50 seconds.
 ---
 
 ## Table of Contents
@@ -157,6 +164,8 @@ How the modules connect:
 | django-cors-headers | 4.9.0 | Allows the React app (a different origin) to call the API |
 | python-dotenv | 1.2.4 | Loads secrets and settings from a `.env` file |
 | asgiref, sqlparse, tzdata | 3.13 / 0.6 / 2026.6 | Installed automatically because Django depends on them |
+gunicorn: production server
+whitenoise: serves static files in production
 
 ### 4.3 Database
 
@@ -387,7 +396,26 @@ Vite only exposes variables that start with `VITE_`. After changing `.env`, rest
 | `TIME_ZONE` / `USE_TZ` | `UTC` / `True` | |
 
 ---
+### Production environment variables (Render)
 
+| Variable | Example |
+|---|---|
+| `PYTHON_VERSION` | `3.12.8` |
+| `DJANGO_SECRET_KEY` | long random string |
+| `DJANGO_DEBUG` | `False` |
+| `DJANGO_ALLOWED_HOSTS` | `powersaver-api.onrender.com` |
+| `CORS_ALLOWED_ORIGINS` | `https://your-app.vercel.app` |
+
+Render build command:
+`pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate`
+
+Render start command: `gunicorn powersaver.wsgi`
+
+### Production environment variable (Vercel)
+
+| Variable | Example |
+|---|---|
+| `VITE_API_URL` | `https://powersaver-api.onrender.com/api` |
 ## 9. Database Design
 
 ### 9.1 SQLite and Django
