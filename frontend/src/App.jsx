@@ -10,6 +10,7 @@ import ComingSoon from './components/ComingSoon.jsx'
 import Landing from './pages/Landing.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
 import NotFound from './pages/NotFound.jsx'
 
 import Dashboard from './pages/Dashboard.jsx'
@@ -46,6 +47,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="*" element={<NotFound />} />
       </Route>
 
