@@ -1,39 +1,54 @@
+
 import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 
-const menu = [
-  { to: '/dashboard', icon: 'bi-speedometer2', label: 'Dashboard' },
+const mainMenu = [
+  { to: '/dashboard', icon: 'bi-grid-1x2', label: 'Energy Overview' },
   { to: '/properties', icon: 'bi-building', label: 'Properties' },
-  { to: '/readings', icon: 'bi-123', label: 'Meter Readings' },
-  { to: '/appliances', icon: 'bi-plug-fill', label: 'Appliances' },
-  { to: '/analytics', icon: 'bi-bar-chart-line-fill', label: 'Analytics' },
-  { to: '/billing', icon: 'bi-receipt', label: 'Bill Estimation' },
-  { to: '/alerts', icon: 'bi-bell-fill', label: 'Alerts' },
-  { to: '/recommendations', icon: 'bi-lightbulb-fill', label: 'Recommendations' },
-  { to: '/forecast', icon: 'bi-graph-up-arrow', label: 'Forecasting' },
-  { to: '/profile', icon: 'bi-person-circle', label: 'Profile' },
+  { to: '/readings', icon: 'bi-speedometer', label: 'Meter Readings' },
+  { to: '/appliances', icon: 'bi-lightning-charge', label: 'Device Control' },
+  { to: '/analytics', icon: 'bi-graph-up', label: 'Usage Insights' },
 ]
 
-function SidebarMenu() {
+const accountMenu = [
+  { to: '/billing', icon: 'bi-receipt', label: 'Bill Estimation' },
+  { to: '/alerts', icon: 'bi-bell', label: 'Alerts' },
+  { to: '/recommendations', icon: 'bi-lightbulb', label: 'Recommendations' },
+  { to: '/forecast', icon: 'bi-graph-up-arrow', label: 'Forecasting' },
+  { to: '/profile', icon: 'bi-gear', label: 'Settings' },
+]
+
+function SidebarMenu({ onNavigate }) {
+  function renderItems(items) {
+    return items.map((item) => (
+      <li key={item.to}>
+        <NavLink
+          to={item.to}
+          onClick={onNavigate}
+          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+        >
+          <i className={`bi ${item.icon}`}></i>
+          <span>{item.label}</span>
+        </NavLink>
+      </li>
+    ))
+  }
+
   return (
     <>
-      <Link
-        to="/"
-        className="d-flex align-items-center text-white text-decoration-none fs-4 fw-bold mb-4 px-2"
-      >
-        <i className="bi bi-lightning-charge-fill text-success me-2"></i>
-        PowerSaver
+      <Link to="/dashboard" className="brand-link" onClick={onNavigate}>
+        <span className="brand-mark"><i className="bi bi-lightning-charge-fill"></i></span>
+        <span>PowerSaver</span>
       </Link>
-      <ul className="nav nav-pills flex-column">
-        {menu.map((item) => (
-          <li className="nav-item" key={item.to}>
-            <NavLink className="nav-link" to={item.to}>
-              <i className={`bi ${item.icon} me-2`}></i>
-              {item.label}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
+      <div className="sidebar-group-label">MENU</div>
+      <ul className="sidebar-nav">{renderItems(mainMenu)}</ul>
+      <div className="sidebar-group-label account-label">ACCOUNT</div>
+      <ul className="sidebar-nav">{renderItems(accountMenu)}</ul>
+      <div className="sidebar-promo">
+        <strong>PowerSaver Plus</strong>
+        <p>Smarter insights for your energy use.</p>
+        <Link to="/recommendations" onClick={onNavigate}>Explore tips</Link>
+      </div>
     </>
   )
 }
@@ -47,60 +62,79 @@ function DashboardLayout() {
     navigate('/login')
   }
 
+  function closeMobileSidebar() {
+    const sidebar = document.getElementById('mobileSidebar')
+    if (sidebar) {
+      window.bootstrap?.Offcanvas
+        ?.getInstance(sidebar)
+        ?.hide()
+    }
+  }
+
   return (
-    <div className="container-fluid">
-      <div className="row">
-        {/* Sidebar: always visible on large screens */}
-        <aside className="col-lg-2 d-none d-lg-block ps-sidebar p-3">
+    <div className="dashboard-viewport">
+      <div className="dashboard-shell">
+        <aside className="dashboard-sidebar d-none d-lg-flex">
           <SidebarMenu />
         </aside>
 
-        {/* Slide-out sidebar for phones and tablets */}
         <div
-          className="offcanvas offcanvas-start ps-sidebar"
+          className="offcanvas offcanvas-start dashboard-mobile-sidebar"
           tabIndex="-1"
           id="mobileSidebar"
-          style={{ width: '260px' }}
+          aria-label="Main navigation"
         >
           <div className="offcanvas-header">
             <button
               type="button"
-              className="btn-close btn-close-white ms-auto"
+              className="btn-close ms-auto"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
             ></button>
           </div>
-          <div className="offcanvas-body pt-0" data-bs-dismiss="offcanvas">
-            <SidebarMenu />
+          <div className="offcanvas-body pt-0">
+            <SidebarMenu onNavigate={closeMobileSidebar} />
           </div>
         </div>
 
-        {/* Main area */}
-        <div className="col-12 col-lg-10 p-0">
-          <div className="ps-topbar d-flex align-items-center justify-content-between px-3 py-2">
+        <main className="dashboard-main">
+          <header className="dashboard-topbar">
             <button
-              className="btn btn-outline-secondary d-lg-none"
               type="button"
+              className="mobile-menu-button d-lg-none"
               data-bs-toggle="offcanvas"
               data-bs-target="#mobileSidebar"
-              aria-label="Open menu"
+              aria-label="Open navigation menu"
             >
               <i className="bi bi-list"></i>
             </button>
-            <span className="fw-semibold ms-2">
-              <i className="bi bi-person-circle me-1"></i>
-              {user?.full_name || user?.username}
-            </span>
-            <button className="btn btn-sm btn-outline-secondary" onClick={handleLogout}>
-              <i className="bi bi-box-arrow-right me-1"></i>
-              Logout
-            </button>
-          </div>
+            <label className="dashboard-search">
+              <i className="bi bi-search"></i>
+              <input type="search" placeholder="Search devices or metrics..." />
+            </label>
+            <div className="topbar-actions">
+              <Link to="/alerts" className="topbar-icon" aria-label="Notifications">
+                <i className="bi bi-bell"></i>
+              </Link>
+              <Link to="/profile" className="user-menu">
+                <span>
+                  <strong>{user?.full_name || user?.username || 'Account'}</strong>
+                  <small>PowerSaver user</small>
+                </span>
+                <span className="user-avatar">
+                  {(user?.full_name || user?.username || 'PS').slice(0, 2).toUpperCase()}
+                </span>
+              </Link>
+              <button className="logout-button" onClick={handleLogout} type="button" aria-label="Logout">
+                <i className="bi bi-box-arrow-right"></i>
+              </button>
+            </div>
+          </header>
 
-          <div className="p-3 p-md-4">
+          <div className="dashboard-content">
             <Outlet />
           </div>
-        </div>
+        </main>
       </div>
     </div>
   )

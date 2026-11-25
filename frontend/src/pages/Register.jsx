@@ -84,6 +84,7 @@ function Register() {
       icon="bi-person-plus-fill"
       title="Create your account"
       subtitle="Start tracking your electricity usage"
+      mode="register"
     >
       <form onSubmit={handleSubmit} noValidate>
         <div className="mb-3">

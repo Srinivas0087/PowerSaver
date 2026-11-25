@@ -1,119 +1,219 @@
-import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { demoDaily, demoSummary } from '../data/demoData.js'
 
 const features = [
   {
     icon: 'bi-speedometer2',
-    title: 'Meter Readings',
-    text: 'Enter meter readings and see your consumption calculated automatically.',
+    title: 'Meter readings',
+    text: 'Record electricity readings and see usage calculated over time.',
   },
   {
-    icon: 'bi-plug-fill',
-    title: 'Appliance Inventory',
-    text: 'List your appliances and estimate how much electricity each one uses.',
+    icon: 'bi-plug',
+    title: 'Appliance tracking',
+    text: 'Keep an appliance inventory and estimate where energy is used.',
   },
   {
     icon: 'bi-receipt',
-    title: 'Bill Estimation',
-    text: 'Set your own tariff rates and estimate your electricity bill.',
+    title: 'Bill estimation',
+    text: 'Configure your tariff and understand your estimated electricity bill.',
   },
   {
-    icon: 'bi-bar-chart-line-fill',
-    title: 'Analytics Charts',
-    text: 'Daily, weekly and monthly charts to understand your usage.',
+    icon: 'bi-bar-chart-line',
+    title: 'Usage analytics',
+    text: 'Explore daily, weekly and monthly consumption trends.',
   },
   {
-    icon: 'bi-bell-fill',
-    title: 'Smart Alerts',
-    text: 'Get warned when your consumption suddenly rises or crosses your limit.',
+    icon: 'bi-bell',
+    title: 'Helpful alerts',
+    text: 'Get notified about unusual usage and important account updates.',
   },
   {
     icon: 'bi-graph-up-arrow',
     title: 'Forecasting',
-    text: 'Statistical forecasts based on your own history, with limitations explained.',
+    text: 'Use your reading history to estimate upcoming energy consumption.',
   },
 ]
 
 const steps = [
-  { title: 'Add your property', text: 'Home, hotel, small business or commercial facility.' },
-  { title: 'Enter your readings', text: 'Add meter readings and appliances.' },
-  { title: 'Save electricity', text: 'Follow the charts, alerts and recommendations.' },
+  { title: 'Add a property', text: 'Set up the home or facility you want to monitor.' },
+  { title: 'Enter readings', text: 'Add meter readings and the appliances you use.' },
+  { title: 'Understand usage', text: 'Use charts, estimates and recommendations to plan ahead.' },
 ]
 
 function Landing() {
+  const previewData = demoDaily.slice(0, 7)
+  const maxUsage = Math.max(...previewData.map((item) => item.kwh))
+  const { pathname, hash } = useLocation()
+
+  useEffect(() => {
+    if (pathname !== '/') return
+
+    const frame = window.requestAnimationFrame(() => {
+      if (hash) {
+        document.getElementById(hash.slice(1))?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        })
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [pathname, hash])
+
   return (
-    <>
-      <section className="ps-hero">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-7 text-center text-lg-start">
-              <h1 className="display-4 fw-bold">
-                Understand and reduce your <span className="text-success">electricity</span> usage
-              </h1>
-              <p className="lead mt-3">
-                PowerSaver helps households, hotels, small businesses and facility managers
-                monitor consumption, estimate bills and find ways to save energy.
-              </p>
-              <div className="mt-4 d-flex gap-3 justify-content-center justify-content-lg-start">
-                <Link to="/register" className="btn btn-ps btn-lg">
-                  Get Started
-                </Link>
-                <Link to="/login" className="btn btn-outline-light btn-lg">
-                  Login
-                </Link>
-              </div>
+    <div className="landing-page">
+      <section className="landing-hero">
+        <div className="landing-hero-inner">
+          <div className="landing-copy">
+            <span className="landing-kicker">
+              <i className="bi bi-lightning-charge-fill"></i>
+              SMARTER ENERGY MANAGEMENT
+            </span>
+            <h1>Make every unit of energy <span>count.</span></h1>
+            <p className="landing-description">
+              Track electricity use, estimate bills and make confident decisions
+              for your home or business with PowerSaver.
+            </p>
+            <div className="landing-actions">
+              <Link to="/register" className="landing-primary-button">
+                Get started <i className="bi bi-arrow-up-right"></i>
+              </Link>
+              <Link to="/login" className="landing-secondary-button">
+                Sign in
+              </Link>
             </div>
-            <div className="col-lg-5 text-center d-none d-lg-block">
-              <i className="bi bi-lightning-charge-fill ps-hero-icon"></i>
+            <div className="landing-benefits">
+              <span><i className="bi bi-check-circle-fill"></i> Usage insights</span>
+              <span><i className="bi bi-check-circle-fill"></i> Bill estimates</span>
+              <span><i className="bi bi-check-circle-fill"></i> One clear view</span>
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="container py-5">
-        <h2 className="text-center fw-bold mb-2">What PowerSaver can do</h2>
-        <p className="text-center text-muted mb-5">
-          Everything you need to track and understand your electricity usage.
-        </p>
-        <div className="row g-4">
-          {features.map((feature) => (
-            <div className="col-12 col-md-6 col-lg-4" key={feature.title}>
-              <div className="card ps-card h-100 p-3">
-                <div className="card-body">
-                  <div className="ps-feature-icon mb-3">
-                    <i className={`bi ${feature.icon}`}></i>
-                  </div>
-                  <h5 className="fw-bold">{feature.title}</h5>
-                  <p className="text-muted mb-0">{feature.text}</p>
+          <div className="landing-preview-wrap">
+            <div className="landing-preview-orbit orbit-one"></div>
+            <div className="landing-preview-orbit orbit-two"></div>
+            <article className="landing-preview">
+              <header className="preview-header">
+                <div className="preview-brand">
+                  <span className="preview-brand-icon"><i className="bi bi-lightning-charge-fill"></i></span>
+                  <span>
+                    <strong>Energy overview</strong>
+                    <small>Sample dashboard</small>
+                  </span>
+                </div>
+                <span className="preview-status"><i></i> DEMO</span>
+              </header>
+
+              <div className="preview-welcome">
+                <div>
+                  <span>YOUR ENERGY AT A GLANCE</span>
+                  <h2>Good energy starts with insight.</h2>
+                </div>
+                <i className="bi bi-three-dots"></i>
+              </div>
+
+              <div className="preview-metrics">
+                <div className="preview-metric">
+                  <span><i className="bi bi-lightning-charge"></i> TODAY</span>
+                  <strong>{demoSummary.today}<small> kWh</small></strong>
+                </div>
+                <div className="preview-metric">
+                  <span><i className="bi bi-calendar-week"></i> THIS WEEK</span>
+                  <strong>{demoSummary.week}<small> kWh</small></strong>
+                </div>
+                <div className="preview-metric">
+                  <span><i className="bi bi-receipt"></i> EST. BILL</span>
+                  <strong>₹{demoSummary.bill.toLocaleString('en-IN')}</strong>
                 </div>
               </div>
-            </div>
-          ))}
+
+              <div className="preview-chart">
+                <div className="preview-chart-heading">
+                  <div>
+                    <strong>Recent consumption</strong>
+                    <small>Daily use · kWh</small>
+                  </div>
+                  <span>Last 7 readings <i className="bi bi-chevron-down"></i></span>
+                </div>
+                <div className="preview-bars" role="img" aria-label="Sample daily energy consumption chart">
+                  {previewData.map((item, index) => (
+                    <div className="preview-bar-column" key={item.day}>
+                      <div className={`preview-bar ${index === 5 ? 'highlight' : ''}`} style={{ height: `${(item.kwh / maxUsage) * 100}%` }}></div>
+                      <small>{item.day.replace('Day ', 'D')}</small>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <footer className="preview-footer">
+                <span><i className="bi bi-shield-check"></i> Sample values, not live meter data</span>
+                <Link to="/register">Explore PowerSaver <i className="bi bi-arrow-right"></i></Link>
+              </footer>
+            </article>
+          </div>
         </div>
+        <a className="landing-scroll-cue" href="#features">
+          Discover PowerSaver <i className="bi bi-arrow-down"></i>
+        </a>
       </section>
 
-      <section className="bg-white py-5">
-        <div className="container">
-          <h2 className="text-center fw-bold mb-5">How it works</h2>
-          <div className="row g-4">
-            {steps.map((step, index) => (
-              <div className="col-12 col-md-4 text-center" key={step.title}>
-                <div className="ps-step-number mx-auto mb-3">{index + 1}</div>
-                <h5 className="fw-bold">{step.title}</h5>
-                <p className="text-muted">{step.text}</p>
-              </div>
+      <section className="landing-features" id="features">
+        <div className="landing-section-inner">
+          <div className="landing-section-heading">
+            <span>BUILT FOR CLARITY</span>
+            <h2>Everything you need to understand your energy.</h2>
+            <p>One simple place to track consumption, costs and the details behind them.</p>
+          </div>
+          <div className="landing-feature-grid">
+            {features.map((feature, index) => (
+              <article className="landing-feature-card" key={feature.title}>
+                <span className="feature-icon"><i className={`bi ${feature.icon}`}></i></span>
+                <span className="feature-index">0{index + 1}</span>
+                <h3>{feature.title}</h3>
+                <p>{feature.text}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="container py-5 text-center">
-        <h2 className="fw-bold">Ready to start saving?</h2>
-        <p className="text-muted">Create a free account and add your first property.</p>
-        <Link to="/register" className="btn btn-ps btn-lg">
-          Create an Account
-        </Link>
+      <section className="landing-how" id="how-it-works">
+        <div className="landing-section-inner">
+          <div className="landing-section-heading">
+            <span>GET STARTED IN THREE STEPS</span>
+            <h2>From readings to a clearer picture.</h2>
+          </div>
+          <div className="landing-steps">
+            {steps.map((step, index) => (
+              <article className="landing-step" key={step.title}>
+                <span className="step-number">0{index + 1}</span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
+                {index < steps.length - 1 && <i className="bi bi-arrow-right step-arrow"></i>}
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
-    </>
+
+      <section className="landing-cta">
+        <div className="landing-cta-inner">
+          <div>
+            <span>START WITH WHAT YOU KNOW</span>
+            <h2>Your energy story starts here.</h2>
+            <p>Create an account and add your first property to get started.</p>
+          </div>
+          <Link to="/register" className="landing-primary-button">
+            Create a free account <i className="bi bi-arrow-up-right"></i>
+          </Link>
+        </div>
+      </section>
+    </div>
   )
 }
 

@@ -143,3 +143,6 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     origin for origin in os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') if origin
 ]
+
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID', '')
+APPLE_OAUTH_CLIENT_ID = os.environ.get('APPLE_OAUTH_CLIENT_ID', '')

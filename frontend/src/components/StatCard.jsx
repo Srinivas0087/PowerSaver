@@ -1,16 +1,26 @@
+
 function StatCard({ icon, label, value, note }) {
   return (
-    <div className="card ps-card h-100">
-      <div className="card-body d-flex align-items-center gap-3">
+    <div className="ps-stat-card h-100">
+      <div className="ps-stat-card-top">
         <div className="ps-stat-icon">
           <i className={`bi ${icon}`}></i>
         </div>
-        <div>
-          <div className="text-muted small">{label}</div>
-          <div className="fs-4 fw-bold">{value}</div>
-          {note && <div className="small text-muted">{note}</div>}
-        </div>
+
+        <span className="ps-stat-card-indicator">
+          <i className="bi bi-lightning-charge"></i>
+        </span>
       </div>
+
+      <div className="ps-stat-label">{label}</div>
+
+      <div className="ps-stat-value">{value}</div>
+
+      {note && (
+        <div className="ps-stat-note">
+          {note}
+        </div>
+      )}
     </div>
   )
 }

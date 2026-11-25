@@ -1,5 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { fetchProfile, loginUser, logoutUser, registerUser } from '../services/authService.js'
+import {
+  fetchProfile,
+  loginUser,
+  logoutUser,
+  registerUser,
+  socialLogin as socialLoginUser,
+} from '../services/authService.js'
 
 const AuthContext = createContext(null)
 
@@ -36,6 +42,12 @@ export function AuthProvider({ children }) {
     setUser(data.user)
   }
 
+  async function socialLogin(provider, identityToken, state, fullName, intent) {
+    const data = await socialLoginUser(provider, identityToken, state, fullName, intent)
+    localStorage.setItem('token', data.token)
+    setUser(data.user)
+  }
+
   async function logout() {
     try {
       await logoutUser()
@@ -47,7 +59,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, socialLogin, logout }}>
       {children}
     </AuthContext.Provider>
   )

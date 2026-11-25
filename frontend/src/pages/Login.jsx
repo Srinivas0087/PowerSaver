@@ -45,6 +45,7 @@ function Login() {
       icon="bi-box-arrow-in-right"
       title="Welcome back"
       subtitle="Login to your PowerSaver account"
+      mode="login"
     >
       <form onSubmit={handleSubmit} noValidate>
         <div className="mb-3">

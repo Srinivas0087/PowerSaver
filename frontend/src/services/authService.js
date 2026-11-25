@@ -16,6 +16,22 @@ export async function loginUser(username, password) {
   return response.data
 }
 
+export async function createSocialNonce(provider) {
+  const response = await api.get('/auth/social/nonce/', { params: { provider } })
+  return response.data
+}
+
+export async function socialLogin(provider, identityToken, state, fullName = '', intent = 'login') {
+  const response = await api.post('/auth/social/login/', {
+    provider,
+    intent,
+    identity_token: identityToken,
+    state,
+    full_name: fullName,
+  })
+  return response.data
+}
+
 export async function logoutUser() {
   await api.post('/auth/logout/')
 }

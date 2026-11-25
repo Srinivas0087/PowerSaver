@@ -62,12 +62,23 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
 
     def validate(self, data):
-        user = authenticate(username=data['username'], password=data['password'])
+        user = User.objects.filter(username__iexact=data['username']).first()
         if user is None:
-            # Same message for "wrong username" and "wrong password" on purpose
+            raise serializers.ValidationError('No account found. Please register first.')
+
+        user = authenticate(username=user.username, password=data['password'])
+        if user is None:
             raise serializers.ValidationError('Invalid username or password.')
         data['user'] = user
         return data
+
+
+class SocialLoginSerializer(serializers.Serializer):
+    provider = serializers.ChoiceField(choices=('google', 'apple'))
+    intent = serializers.ChoiceField(choices=('login', 'register'))
+    identity_token = serializers.CharField(max_length=8192)
+    state = serializers.CharField(max_length=500)
+    full_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
 
 
 class ProfileSerializer(serializers.Serializer):
