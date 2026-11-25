@@ -1,136 +1,132 @@
-import {
-  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-} from 'recharts'
-
-import StatCard from '../components/StatCard.jsx'
-import {
-  demoSummary, demoDaily, demoWeekly, demoMonthly, demoAppliances,
-} from '../data/demoData.js'
-
-const PIE_COLORS = ['#16a34a', '#0b2447', '#4ade80', '#19376d', '#94a3b8']
-
 function Dashboard() {
-  const change = (
-    ((demoSummary.month - demoSummary.lastMonth) / demoSummary.lastMonth) * 100
-  ).toFixed(1)
+  const usage = [
+    { day: 'MON', value: 40 },
+    { day: 'TUE', value: 100 },
+    { day: 'WED', value: 68 },
+    { day: 'THU', value: 100 },
+    { day: 'FRI', value: 75 },
+    { day: 'SAT', value: 45 },
+    { day: 'SUN', value: 84 },
+  ]
+  const devices = [
+    { name: 'HVAC System', detail: 'Heating & Cooling', icon: 'bi-grid', active: true },
+    { name: 'Smart Fridge', detail: 'Energy Efficient', icon: 'bi-snow', active: true },
+    { name: 'Smart Devices', detail: 'Eco Mode - Home', icon: 'bi-laptop', active: true },
+    { name: 'EV Charger', detail: 'Disconnected', icon: 'bi-battery-charging', active: false },
+  ]
 
   return (
-    <>
-      <h2 className="fw-bold mb-3">Dashboard</h2>
+    <div className="energy-dashboard">
+      <header className="dashboard-heading">
+        <div>
+          <h1>Energy Dashboard</h1>
+          <p>Monitor and optimize your renewable energy flow in real-time.</p>
+        </div>
+        <div className="heading-actions">
+          <button type="button" className="add-device-button"><i className="bi bi-plus"></i> Add Device</button>
+          <button type="button" className="export-button">Export Report</button>
+        </div>
+      </header>
 
-      <div className="alert alert-warning">
-        <i className="bi bi-info-circle-fill me-2"></i>
-        <strong>Demonstration data:</strong> these numbers are not from your account.
-        Real data appears after the backend is connected (Phase 9).
-      </div>
+      <section className="metric-grid">
+        <article className="metric-card metric-primary">
+          <div className="metric-label">Total Power Generated <i className="bi bi-arrow-up-right"></i></div>
+          <div className="metric-value">452.8 <span>kWh</span></div>
+          <div className="metric-note"><i className="bi bi-arrow-up-right"></i> 12% more than last week</div>
+        </article>
+        <article className="metric-card">
+          <div className="metric-label">Current Consumption <i className="bi bi-lightning-charge"></i></div>
+          <div className="metric-value">2.4 <span>kW</span></div>
+          <div className="metric-note warning"><i className="bi bi-exclamation-circle"></i> Peak usage detected</div>
+        </article>
+        <article className="metric-card">
+          <div className="metric-label">Battery Storage Level <i className="bi bi-battery-half"></i></div>
+          <div className="metric-value">84 <span>%</span></div>
+          <div className="metric-note"><i className="bi bi-check-circle"></i> Charging optimally</div>
+        </article>
+        <article className="metric-card">
+          <div className="metric-label">Grid Status <i className="bi bi-grid"></i></div>
+          <div className="metric-value status-value">Online</div>
+          <div className="metric-note"><i className="bi bi-clock"></i> Last sync: 2 min ago</div>
+        </article>
+      </section>
 
-      <div className="row g-3 mb-4">
-        <div className="col-12 col-sm-6 col-xl-4">
-          <StatCard icon="bi-lightning-charge" label="Total consumption" value={`${demoSummary.total} kWh`} />
-        </div>
-        <div className="col-12 col-sm-6 col-xl-4">
-          <StatCard icon="bi-sun" label="Today" value={`${demoSummary.today} kWh`} />
-        </div>
-        <div className="col-12 col-sm-6 col-xl-4">
-          <StatCard icon="bi-calendar-week" label="This week" value={`${demoSummary.week} kWh`} />
-        </div>
-        <div className="col-12 col-sm-6 col-xl-4">
-          <StatCard icon="bi-calendar-month" label="This month" value={`${demoSummary.month} kWh`} />
-        </div>
-        <div className="col-12 col-sm-6 col-xl-4">
-          <StatCard icon="bi-receipt" label="Estimated bill" value={`₹${demoSummary.bill}`} note="Estimate only" />
-        </div>
-        <div className="col-12 col-sm-6 col-xl-4">
-          <StatCard
-            icon="bi-arrow-left-right"
-            label="Vs previous month"
-            value={`${change > 0 ? '+' : ''}${change}%`}
-            note={`Previous: ${demoSummary.lastMonth} kWh`}
-          />
-        </div>
-      </div>
-
-      <div className="row g-3">
-        <div className="col-12 col-xl-8">
-          <div className="card ps-card h-100">
-            <div className="card-body">
-              <h5 className="fw-bold">Daily consumption (kWh)</h5>
-              <div style={{ width: '100%', height: 280 }}>
-                <ResponsiveContainer>
-                  <LineChart data={demoDaily}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="kwh" stroke="#16a34a" strokeWidth={3} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+      <section className="dashboard-grid">
+        <article className="panel savings-panel">
+          <header className="panel-header">
+            <h2>Savings Progress</h2>
+            <button type="button" aria-label="More options"><i className="bi bi-three-dots"></i></button>
+          </header>
+          <div className="savings-ring">
+            <div className="ring-inner">
+              <strong>67%</strong>
+              <span>GOAL REACHED</span>
             </div>
           </div>
-        </div>
-
-        <div className="col-12 col-xl-4">
-          <div className="card ps-card h-100">
-            <div className="card-body">
-              <h5 className="fw-bold">Appliance usage (estimated)</h5>
-              <div style={{ width: '100%', height: 280 }}>
-                <ResponsiveContainer>
-                  <PieChart>
-                    <Pie data={demoAppliances} dataKey="value" nameKey="name" outerRadius={85}>
-                      {demoAppliances.map((item, index) => (
-                        <Cell key={item.name} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
+          <div className="savings-legend">
+            <div><span><i className="legend-dot eco"></i>Eco Generated</span><strong>$124.50</strong></div>
+            <div><span><i className="legend-dot grid"></i>Grid Savings</span><strong>$42.10</strong></div>
           </div>
-        </div>
+        </article>
 
-        <div className="col-12 col-lg-6">
-          <div className="card ps-card h-100">
-            <div className="card-body">
-              <h5 className="fw-bold">Weekly consumption (kWh)</h5>
-              <div style={{ width: '100%', height: 260 }}>
-                <ResponsiveContainer>
-                  <BarChart data={demoWeekly}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="week" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="kwh" fill="#0b2447" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+        <article className="panel usage-panel">
+          <header className="panel-header">
+            <div>
+              <h2>Real-time Usage</h2>
+              <p>Power consumption (kWh)</p>
             </div>
+            <button type="button" className="period-button">Last 24 Hours <i className="bi bi-chevron-down"></i></button>
+          </header>
+          <div className="usage-chart">
+            {usage.map((item) => (
+              <div className="usage-column" key={item.day}>
+                {item.day === 'TUE' && <span className="usage-tooltip">3.2kW</span>}
+                <div className="usage-track">
+                  <div className={item.day === 'MON' || item.day === 'THU' || item.day === 'SUN' ? 'usage-bar dark' : 'usage-bar'} style={{ height: `${item.value}%` }}></div>
+                </div>
+                <span className="usage-day">{item.day}</span>
+              </div>
+            ))}
           </div>
-        </div>
+        </article>
 
-        <div className="col-12 col-lg-6">
-          <div className="card ps-card h-100">
-            <div className="card-body">
-              <h5 className="fw-bold">Monthly consumption (kWh)</h5>
-              <div style={{ width: '100%', height: 260 }}>
-                <ResponsiveContainer>
-                  <BarChart data={demoMonthly}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="kwh" fill="#16a34a" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+        <article className="panel devices-panel">
+          <header className="panel-header">
+            <h2>Smart Devices</h2>
+            <button type="button" className="manage-button">Manage All</button>
+          </header>
+          <div className="device-grid">
+            {devices.map((device) => (
+              <div className="device-row" key={device.name}>
+                <span className="device-icon"><i className={`bi ${device.icon}`}></i></span>
+                <span className="device-copy"><strong>{device.name}</strong><small>{device.detail}</small></span>
+                <button type="button" className={`device-toggle ${device.active ? 'active' : ''}`} aria-label={`Toggle ${device.name}`}>
+                  <span></span>
+                </button>
               </div>
-            </div>
+            ))}
           </div>
-        </div>
-      </div>
-    </>
+        </article>
+
+        <article className="panel carbon-panel">
+          <div className="carbon-top">
+            <div>
+              <h2>Carbon Offset Tracker</h2>
+              <p>Total environmental impact this year</p>
+            </div>
+            <span className="carbon-badge">LEADERBOARD #3</span>
+          </div>
+          <div className="carbon-stats">
+            <div><small>CO2 AVOIDED</small><strong>12.4 <span>tons</span></strong></div>
+            <div><small>TREES EQUIVALENT</small><strong>548 <span>planted</span></strong></div>
+          </div>
+          <footer>
+            <button type="button">View Detailed Impact</button>
+            <button type="button" className="share-button" aria-label="Share impact"><i className="bi bi-share"></i></button>
+          </footer>
+        </article>
+      </section>
+    </div>
   )
 }
 

@@ -2,16 +2,15 @@ import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 
 const menu = [
-  { to: '/dashboard', icon: 'bi-speedometer2', label: 'Dashboard' },
-  { to: '/properties', icon: 'bi-building', label: 'Properties' },
-  { to: '/readings', icon: 'bi-123', label: 'Meter Readings' },
-  { to: '/appliances', icon: 'bi-plug-fill', label: 'Appliances' },
-  { to: '/analytics', icon: 'bi-bar-chart-line-fill', label: 'Analytics' },
-  { to: '/billing', icon: 'bi-receipt', label: 'Bill Estimation' },
-  { to: '/alerts', icon: 'bi-bell-fill', label: 'Alerts' },
-  { to: '/recommendations', icon: 'bi-lightbulb-fill', label: 'Recommendations' },
-  { to: '/forecast', icon: 'bi-graph-up-arrow', label: 'Forecasting' },
-  { to: '/profile', icon: 'bi-person-circle', label: 'Profile' },
+  { to: '/dashboard', icon: 'bi-grid-1x2', label: 'Energy Overview' },
+  { to: '/appliances', icon: 'bi-lightning-charge', label: 'Device Control' },
+  { to: '/analytics', icon: 'bi-graph-up', label: 'Usage Insights' },
+  { to: '/billing', icon: 'bi-receipt', label: 'Billing' },
+]
+
+const accountMenu = [
+  { to: '/profile', icon: 'bi-gear', label: 'Settings' },
+  { to: '/alerts', icon: 'bi-question-circle', label: 'Support' },
 ]
 
 function SidebarMenu() {
@@ -19,16 +18,28 @@ function SidebarMenu() {
     <>
       <Link
         to="/"
-        className="d-flex align-items-center text-white text-decoration-none fs-4 fw-bold mb-4 px-2"
+        className="brand-link"
       >
-        <i className="bi bi-lightning-charge-fill text-success me-2"></i>
-        PowerSaver
+        <span className="brand-mark"><i className="bi bi-lightning-charge-fill"></i></span>
+        <span>EcoSync</span>
       </Link>
-      <ul className="nav nav-pills flex-column">
+      <div className="sidebar-group-label">MENU</div>
+      <ul className="nav sidebar-nav flex-column">
         {menu.map((item) => (
           <li className="nav-item" key={item.to}>
             <NavLink className="nav-link" to={item.to}>
-              <i className={`bi ${item.icon} me-2`}></i>
+              <i className={`bi ${item.icon}`}></i>
+              {item.label}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+      <div className="sidebar-group-label account-label">ACCOUNT</div>
+      <ul className="nav sidebar-nav flex-column">
+        {accountMenu.map((item) => (
+          <li className="nav-item" key={item.to}>
+            <NavLink className="nav-link" to={item.to}>
+              <i className={`bi ${item.icon}`}></i>
               {item.label}
             </NavLink>
           </li>
@@ -48,11 +59,15 @@ function DashboardLayout() {
   }
 
   return (
-    <div className="container-fluid">
-      <div className="row">
+    <div className="dashboard-shell">
         {/* Sidebar: always visible on large screens */}
-        <aside className="col-lg-2 d-none d-lg-block ps-sidebar p-3">
+        <aside className="ps-sidebar d-none d-lg-flex">
           <SidebarMenu />
+          <div className="sidebar-promo">
+            <div className="promo-title">EcoSync Pro</div>
+            <p>Upgrade for smarter AI automation</p>
+            <button type="button">Get Pro</button>
+          </div>
         </aside>
 
         {/* Slide-out sidebar for phones and tablets */}
@@ -76,10 +91,10 @@ function DashboardLayout() {
         </div>
 
         {/* Main area */}
-        <div className="col-12 col-lg-10 p-0">
-          <div className="ps-topbar d-flex align-items-center justify-content-between px-3 py-2">
+        <div className="dashboard-main">
+          <div className="ps-topbar">
             <button
-              className="btn btn-outline-secondary d-lg-none"
+              className="mobile-menu-button d-lg-none"
               type="button"
               data-bs-toggle="offcanvas"
               data-bs-target="#mobileSidebar"
@@ -87,21 +102,34 @@ function DashboardLayout() {
             >
               <i className="bi bi-list"></i>
             </button>
-            <span className="fw-semibold ms-2">
-              <i className="bi bi-person-circle me-1"></i>
-              {user?.full_name || user?.username}
-            </span>
-            <button className="btn btn-sm btn-outline-secondary" onClick={handleLogout}>
-              <i className="bi bi-box-arrow-right me-1"></i>
-              Logout
-            </button>
+            <label className="dashboard-search">
+              <i className="bi bi-search"></i>
+              <input type="search" placeholder="Search devices or metrics..." />
+            </label>
+            <div className="topbar-actions">
+              <button type="button" className="topbar-icon" aria-label="Theme">
+                <i className="bi bi-moon"></i>
+              </button>
+              <button type="button" className="topbar-icon notification-button" aria-label="Notifications">
+                <i className="bi bi-bell"></i>
+              </button>
+              <Link to="/profile" className="user-menu">
+                <span>
+                  <strong>{user?.full_name || user?.username || 'Julian Rivera'}</strong>
+                  <small>Family Owner</small>
+                </span>
+                <span className="user-avatar">{(user?.full_name || user?.username || 'JR').slice(0, 2).toUpperCase()}</span>
+              </Link>
+              <button type="button" className="logout-button" onClick={handleLogout} aria-label="Logout">
+                <i className="bi bi-box-arrow-right"></i>
+              </button>
+            </div>
           </div>
 
-          <div className="p-3 p-md-4">
+          <main className="dashboard-content">
             <Outlet />
-          </div>
+          </main>
         </div>
-      </div>
     </div>
   )
 }
