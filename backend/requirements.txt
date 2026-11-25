@@ -1,8 +1,13 @@
 asgiref==3.13.0
 Django==6.1.3
-django-cors-headers==4.9.0
 djangorestframework==3.18.3
+<<<<<<< HEAD
 PyJWT[crypto]==2.10.1
+=======
+django-cors-headers==4.9.0
+>>>>>>> 8ef158703e71b152a74c6ccdfcc7f793fe4020be
 python-dotenv==1.2.4
-sqlparse==0.6.1
+sqlparse==0.6.0
 tzdata==2026.6
+gunicorn
+whitenoise
