@@ -58,6 +58,7 @@ function SocialAuthButtons({ mode }) {
   const socialLoginRef = useRef(socialLogin)
   const navigateRef = useRef(navigate)
   const [challenges, setChallenges] = useState({})
+  const [googleButtonReady, setGoogleButtonReady] = useState(false)
   const [message, setMessage] = useState('')
   const [loadingProvider, setLoadingProvider] = useState('')
 
@@ -81,6 +82,7 @@ function SocialAuthButtons({ mode }) {
 
   useEffect(() => {
     let cancelled = false
+    let googleButtonObserver
 
     async function prepareGoogle() {
       if (!googleClientId) return
@@ -93,6 +95,14 @@ function SocialAuthButtons({ mode }) {
         )
         if (cancelled || !googleButton.current) return
 
+        const buttonContainer = googleButton.current
+        googleButtonObserver = new MutationObserver(() => {
+          if (buttonContainer.querySelector('iframe')) {
+            setGoogleButtonReady(true)
+            googleButtonObserver.disconnect()
+          }
+        })
+        googleButtonObserver.observe(buttonContainer, { childList: true, subtree: true })
         window.google.accounts.id.initialize({
           client_id: googleClientId,
           nonce: challenge.nonce,
@@ -104,14 +114,18 @@ function SocialAuthButtons({ mode }) {
             void finishLogin('google', response.credential, challenge.state)
           },
         })
-        window.google.accounts.id.renderButton(googleButton.current, {
+        window.google.accounts.id.renderButton(buttonContainer, {
           type: 'standard',
           theme: 'outline',
           size: 'large',
           text: 'continue_with',
           shape: 'rectangular',
-          width: Math.floor(googleButton.current.getBoundingClientRect().width),
+          width: Math.floor(buttonContainer.getBoundingClientRect().width),
         })
+        if (buttonContainer.querySelector('iframe')) {
+          setGoogleButtonReady(true)
+          googleButtonObserver.disconnect()
+        }
         setChallenges((current) => ({ ...current, google: challenge }))
       } catch (error) {
         setMessage(getSocialErrorMessage(error, 'Google'))
@@ -139,6 +153,7 @@ function SocialAuthButtons({ mode }) {
     prepareApple()
     return () => {
       cancelled = true
+      googleButtonObserver?.disconnect()
     }
   }, [finishLogin])
 
@@ -195,9 +210,8 @@ function SocialAuthButtons({ mode }) {
     <div className="auth-social">
       <div className="auth-social-buttons">
         <div className="auth-google-slot">
-          {googleClientId ? (
-            <div className="auth-google-button" ref={googleButton}></div>
-          ) : (
+          <div className="auth-google-button" ref={googleButton} hidden={!googleButtonReady}></div>
+          {!googleButtonReady && (
             <button type="button" className="auth-social-button" onClick={handleGoogleClick}>
               <i className="bi bi-google" aria-hidden="true"></i>
               <span>Continue with Google</span>
